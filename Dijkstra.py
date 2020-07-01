@@ -1,51 +1,10 @@
 import sys
-from collections import deque
 from heapq import heappop, heappush
 
 from Graph import Digraph
 
 
-# Dijkstra single-source shortest path
-# def dijkstra_sssp(g, source):
-#     all_sp = []
-#     visited = set()
-#     dist = {}  # distances
-#     pred = {}  # predecessors
-#     for v in g.vertices():
-#         dist[v] = sys.maxsize
-#         pred[v] = None
-#     dist[source] = 0
-#
-#     minq = [(0, '', source)]
-#     while minq:
-#         _, _, v1 = heappop(minq)
-#         if v1 in visited:
-#             continue
-#         for v2 in g.neighbors(v1):
-#             if v2 not in visited:
-#                 if dist[v1] + g.get_weight(v1, v2) < dist[v2]:  # relaxation
-#                     dist[v2] = dist[v1] + g.get_weight(v1, v2)
-#                     pred[v2] = v1
-#                     heappush(minq, (dist[v2], v1, v2))
-#         visited.add(v1)
-#
-#     for v in g.vertices():  # generate all shortest paths
-#         if v == source or pred[v] is None:
-#             continue
-#         sp = deque([v])  # shortest path
-#         curr = v
-#         while pred[curr] != source:
-#             sp.appendleft(pred[curr])
-#             curr = pred[curr]
-#         sp.appendleft(source)
-#         all_sp.append((dist[v], list(sp)))
-#
-#     return all_sp
-
-
 def dijkstra_sssp(g, source):
-    all_sp = []
-    visited = set()
     dist = {}  # distances
     pred = {}  # predecessors
     for v in g.vertices():
@@ -56,28 +15,16 @@ def dijkstra_sssp(g, source):
     minq = [(0, source)]
     while minq:
         _, v1 = heappop(minq)
-        if v1 not in visited:
-            for v2 in g.neighbors(v1):
-                if v2 not in visited:
-                    d = dist[v1] + g.get_weight(v1, v2)
-                    if d < dist[v2]:  # relaxation
-                        dist[v2] = d
-                        pred[v2] = v1
-                        heappush(minq, (dist[v2], v2))
-            visited.add(v1)
+        for v2 in g.neighbors(v1):
+            d = dist[v1] + g.get_weight(v1, v2)
+            if d < dist[v2]:  # relaxation
+                dist[v2] = d
+                pred[v2] = v1
+                heappush(minq, (dist[v2], v2))
+    return dist
 
-    for v in g.vertices():  # generate all shortest paths
-        if v == source or pred[v] is None:
-            continue
-        sp = deque([v])  # shortest path
-        curr = v
-        while pred[curr] != source:
-            sp.appendleft(pred[curr])
-            curr = pred[curr]
-        sp.appendleft(source)
-        all_sp.append((dist[v], list(sp)))
 
-    return all_sp
+# to get the path, refer to the predecessors dictionary
 
 
 if __name__ == '__main__':
@@ -115,6 +62,3 @@ if __name__ == '__main__':
     dg.add_edge(11, 12)
     print(dg)
     print(dijkstra_sssp(dg, 0))
-
-
-
