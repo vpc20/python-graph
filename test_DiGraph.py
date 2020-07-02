@@ -1,17 +1,17 @@
 from random import randint, choice
 from unittest import TestCase
-import networkx as nx
 import Graph as gx
+import networkx as nx
 
 
 class TestGraph(TestCase):
     def test_add_edge(self):
         for _ in range(1000):
-            nxg = nx.fast_gnp_random_graph(randint(1, 10), randint(1, 9) / 10)
+            nxg = nx.fast_gnp_random_graph(randint(1, 10), randint(1, 9) / 10, directed=True)
             print(sorted(nxg.nodes))
             print(sorted(nxg.edges))
 
-            g = gx.Graph()
+            g = gx.Digraph()
             for node in nxg.nodes:
                 g.add_vertex(node)
             for u, v in nxg.edges:
@@ -24,11 +24,11 @@ class TestGraph(TestCase):
 
     def test_add_edges_from(self):
         for _ in range(1000):
-            nxg = nx.fast_gnp_random_graph(randint(1, 10), randint(1, 9) / 10)
+            nxg = nx.fast_gnp_random_graph(randint(1, 10), randint(1, 9) / 10, directed=True)
             print(sorted(nxg.nodes))
             print(sorted(nxg.edges))
 
-            g = gx.Graph()
+            g = gx.Digraph()
             for node in nxg.nodes:
                 g.add_vertex(node)
             g.add_edges_from(nxg.edges)
@@ -40,15 +40,15 @@ class TestGraph(TestCase):
 
     def test_add_weighted_edges_from(self):
         for _ in range(1000):
-            nxg = nx.fast_gnp_random_graph(randint(1, 10), randint(1, 9) / 10)
+            nxg = nx.fast_gnp_random_graph(randint(1, 10), randint(1, 9) / 10, directed=True)
             print(sorted(nxg.nodes))
             print(sorted(nxg.edges))
-            elist = []  # elist = (u, v, w)
+            elist = []
             for u, v in nxg.edges:
                 nxg[u][v]['weight'] = randint(1, 20)
                 elist.append((u, v, nxg[u][v]['weight']))
 
-            g = gx.Graph()
+            g = gx.Digraph()
             for node in nxg.nodes:
                 g.add_vertex(node)
             g.add_weighted_edges_from(elist)
@@ -63,11 +63,11 @@ class TestGraph(TestCase):
 
     def test_remove_edge(self):
         for _ in range(1000):
-            nxg = nx.fast_gnp_random_graph(randint(1, 10), randint(1, 9) / 10)
+            nxg = nx.fast_gnp_random_graph(randint(1, 10), randint(1, 9) / 10, directed=True)
             print(sorted(nxg.nodes))
             print(sorted(nxg.edges))
 
-            g = gx.Graph()
+            g = gx.Digraph()
             for node in nxg.nodes:
                 g.add_vertex(node)
             g.add_edges_from(nxg.edges)
@@ -83,11 +83,11 @@ class TestGraph(TestCase):
             assert sorted(nxg.edges) == sorted(g.edges)
 
         for _ in range(1000):
-            nxg = nx.fast_gnp_random_graph(randint(1, 10), randint(1, 9) / 10)
+            nxg = nx.fast_gnp_random_graph(randint(1, 10), randint(1, 9) / 10, directed=True)
             print(sorted(nxg.nodes))
             print(sorted(nxg.edges))
 
-            g = gx.Graph()
+            g = gx.Digraph()
             for node in nxg.nodes:
                 g.add_vertex(node)
             g.add_edges_from(nxg.edges)
@@ -102,11 +102,11 @@ class TestGraph(TestCase):
 
     def test_remove_vertex(self):
         for _ in range(1000):
-            nxg = nx.fast_gnp_random_graph(randint(1, 10), randint(1, 9) / 10)
+            nxg = nx.fast_gnp_random_graph(randint(1, 10), randint(1, 9) / 10, directed=True)
             print(sorted(nxg.nodes))
             print(sorted(nxg.edges))
 
-            g = gx.Graph()
+            g = gx.Digraph()
             for node in nxg.nodes:
                 g.add_vertex(node)
             g.add_edges_from(nxg.edges)
@@ -121,11 +121,11 @@ class TestGraph(TestCase):
             assert sorted(nxg.edges) == sorted(g.edges)
 
         for _ in range(1000):
-            nxg = nx.fast_gnp_random_graph(randint(1, 10), randint(1, 9) / 10)
+            nxg = nx.fast_gnp_random_graph(randint(1, 10), randint(1, 9) / 10, directed=True)
             print(sorted(nxg.nodes))
             print(sorted(nxg.edges))
 
-            g = gx.Graph()
+            g = gx.Digraph()
             for node in nxg.nodes:
                 g.add_vertex(node)
             g.add_edges_from(nxg.edges)

@@ -6,72 +6,98 @@ from DisjointSet import DisjointSet
 
 class Graph:
     def __init__(self):
-        self.adj_list = defaultdict(list)
+        self.adj = defaultdict(list)
         self.weights = {}
 
     def __str__(self):
-        return str(dict(self.adj_list))
+        return str(self.adj)[28:-1]
 
+    @property
     def vertices(self):
-        return list(self.adj_list.keys())
+        return list(self.adj.keys())
+
+    @property
+    def edges(self):
+        eset = set()
+        for v in self.vertices:
+            for nb in self.neighbors(v):
+                if (nb, v) not in eset:
+                    eset.add((v, nb))
+        return list(eset)
 
     def neighbors(self, vertex):
-        return self.adj_list[vertex]
+        return self.adj[vertex]
 
-    def edges(self):
-        return [(vertex, neighbor)
-                for vertex in self.vertices()
-                for neighbor in self.neighbors(vertex)]
+    def all_weights(self):
+        return [((u, v), self.weight(u, v)) for u, v in self.edges]
 
-    # def all_weights(self):
-    #     return self.weights
-
-    def get_weight(self, v1, v2):
-        return self.weights[(v1, v2)]
+    def weight(self, v1, v2):
+        if (v1, v2) in self.weights:
+            return self.weights[(v1, v2)]
+        elif (v2, v1) in self.weights:
+            return self.weights[(v2, v1)]
+        else:
+            return 0
 
     def add_vertex(self, vertex):
-        self.adj_list[vertex] = []
+        self.adj[vertex] = []
 
     def remove_vertex(self, vertex):
-        self.adj_list.pop(vertex)
-        for k, v in self.adj_list.items():
+        self.adj.pop(vertex)
+        for k, v in self.adj.items():
             if vertex in v:
-                self.adj_list[k].remove(vertex)
+                self.adj[k].remove(vertex)
 
-    def add_edge(self, v1, v2, weight=1):
-        self.adj_list[v1].append(v2)
-        self.adj_list[v2].append(v1)
-        self.weights[(v1, v2)] = weight
-        self.weights[(v2, v1)] = weight
+    def add_edge(self, u, v, weight=1):
+        self.adj[u].append(v)
+        self.adj[v].append(u)
+        self.weights[(u, v)] = weight
+        self.weights[(v, u)] = weight
 
     def add_edges_from(self, edges_arr):
-        for v1, v2 in edges_arr:
-            self.add_edge(v1, v2)
+        for u, v in edges_arr:
+            self.add_edge(u, v)
 
-    def add_single_edge(self, v1, v2, weight=1):
-        self.adj_list[v1].append(v2)
-        self.weights[(v1, v2)] = weight
+    def add_weighted_edges_from(self, edges_arr):
+        for u, v, w in edges_arr:
+            self.add_edge(u, v, w)
 
-    def remove_edge(self, v1, v2):
-        self.adj_list[v1].remove(v2)
-        self.adj_list[v2].remove(v1)
-        self.weights.pop((v1, v2))
-        self.weights.pop((v2, v1))
+    def add_single_edge(self, u, v, weight=1):
+        self.adj[u].append(v)
+        self.weights[(u, v)] = weight
+
+    def remove_edge(self, u, v):
+        self.adj[u].remove(v)
+        self.adj[v].remove(u)
+        self.weights.pop((u, v))
+        self.weights.pop((v, u))
 
 
 class Digraph(Graph):
     def __init__(self):
         super().__init__()
 
-    def add_edge(self, v1, v2, weight=1):
-        self.adj_list[v1].append(v2)
-        if not self.adj_list[v2]:
-            self.adj_list[v2] = []
-        self.weights[(v1, v2)] = weight
+    @property
+    def edges(self):
+        return [(v, nb) for v in self.vertices for nb in self.neighbors(v)]
 
-    def remove_edge(self, v1, v2):
-        self.adj_list[v1].remove(v2)
-        self.weights.pop((v1, v2))
+    def add_edge(self, u, v, weight=1):
+        self.adj[u].append(v)
+        if v not in self.adj:
+            self.adj[v] = []
+        self.weights[(u, v)] = weight
+
+    def add_edges_from(self, edges):
+        for u, v in edges:
+            self.add_edge(u, v)
+
+    def add_weighted_edges_from(self, edges):
+        for u, v, w in edges:
+            self.add_edge(u, v, w)
+
+    def remove_edge(self, u, v):
+        self.adj[u].remove(v)
+        self.weights.pop((u, v))
 
 
 def complete_graph(n, alpha=False):
@@ -100,7 +126,6 @@ def path_graph(n):
 
 
 def circular_graph(n):
-    g = Graph
     g = path_graph(n)
     g.add_edge(n - 1, 0)
     return g
@@ -164,7 +189,7 @@ def is_connected(g):
     :param g: undirected graph
     :return: True if the the graph is connected, otherwise False
     """
-    gverts = g.vertices()
+    gverts = g.vertices
     vset = set(gverts)
     queue = [gverts[0]]
     vset.remove(gverts[0])
@@ -198,11 +223,11 @@ def is_connected(g):
 def is_undirected_cyclic(g):
     djset = DisjointSet()
 
-    for v in g.vertices():
+    for v in g.vertices:
         djset.make_set(v)
 
     eset = set()
-    for v1, v2 in g.edges():
+    for v1, v2 in g.edges:
         if (v2, v1) not in eset:
             eset.add((v1, v2))
 
@@ -244,7 +269,7 @@ def is_directed_cyclic(g):  # dfs traversal
 
     visited = set()
     cycle_stack = []
-    for v in g.vertices():
+    for v in g.vertices:
         if v not in visited:
             visited.add(v)
             if _is_cyclic(g, v):
@@ -294,9 +319,9 @@ def is_directed_acyclic(g):
         return False
 
     WHITE, GRAY, BLACK = 1, 2, 3  # unexplored, under exploration, explored
-    color = {v: WHITE for v in g.vertices()}  # vertex color
+    color = {v: WHITE for v in g.vertices}  # vertex color
 
-    for v in g.vertices():  # main loop
+    for v in g.vertices:  # main loop
         if color[v] == WHITE:
             return _dfs(g, v)
 
@@ -313,11 +338,11 @@ def is_forest(g):
 
     djset = DisjointSet()
 
-    for v in g.vertices():
+    for v in g.vertices:
         djset.make_set(v)
 
     eset = set()
-    for v1, v2 in g.edges():
+    for v1, v2 in g.edges:
         if (v2, v1) not in eset:
             eset.add((v1, v2))
 
@@ -348,7 +373,7 @@ def is_spanning_tree(g, edges):
     :param g: input graph
     :param edges: list of edges for spanning tree checking
     """
-    vset = set(g.vertices())
+    vset = set(g.vertices)
     for v1, v2 in edges:
         if v1 in vset:
             vset.remove(v1)
@@ -375,7 +400,7 @@ def is_bipartite_bfs(graph):
     colors = defaultdict(int)
     curr_color = 0
     queue = deque()
-    for vertex in graph.vertices():
+    for vertex in graph.vertices:
         if vertex not in visited:
             colors[vertex] = curr_color
             queue.append(vertex)
@@ -409,7 +434,7 @@ def is_bipartite_dfs(graph):
         return True
 
     visited = set()
-    for vertex in graph.vertices():
+    for vertex in graph.vertices:
         if vertex not in visited:
             colors = {vertex: 0}
             visited.add(vertex)
@@ -437,7 +462,7 @@ def is_vertex_cover(graph, vlist):
     :param vlist: list of vertices for checking vertex cover
     :return: True if the set of vertices is a vertex cover, otherwise False
     """
-    edge_list = graph.edges()
+    edge_list = graph.edges
     for vertex in vlist:
         i = 0
         while edge_list and i < len(edge_list):
@@ -449,8 +474,8 @@ def is_vertex_cover(graph, vlist):
 
 
 def min_vertex_cover_brute(graph):
-    for r in range(1, len(graph.vertices()) + 1):
-        for comb in combinations(graph.vertices(), r):
+    for r in range(1, len(graph.vertices) + 1):
+        for comb in combinations(graph.vertices, r):
             if is_vertex_cover(graph, comb):
                 return comb
     return ()
@@ -458,7 +483,7 @@ def min_vertex_cover_brute(graph):
 
 def approx_vertex_cover(graph):
     vcover_list = []  # list of vertices
-    edges_list = graph.edges()
+    edges_list = graph.edges
     while edges_list:
         v1, v2 = edges_list[0]
         vcover_list.append(v1)
@@ -474,7 +499,7 @@ def approx_vertex_cover(graph):
 
 def list_edges(graph, vertex_list):
     edge_list = []
-    for edge in graph.edges():
+    for edge in graph.edges:
         if edge[0] in vertex_list and edge[1] in vertex_list and edge not in edge_list:
             edge_list.append(edge)
     return edge_list
@@ -503,8 +528,8 @@ def is_clique(graph, vlist):
 
 
 def clique(graph):
-    for i in range(len(graph.vertices()) + 1, 1, -1):
-        for comb in combinations(graph.vertices(), i):
+    for i in range(len(graph.vertices) + 1, 1, -1):
+        for comb in combinations(graph.vertices, i):
             if is_clique(graph, comb):
                 return comb
     return None
@@ -521,7 +546,7 @@ def is_independent_set(graph, vlist):
     :return: True if the list of vertices forms an independent set, otherwise Fals
     """
     for vertex in vlist:
-        for v1, v2 in graph.edges():
+        for v1, v2 in graph.edges:
             if (vertex == v1 and v2 in vlist) or \
                     (vertex == v2 and v1 in vlist):
                 return False
@@ -529,20 +554,20 @@ def is_independent_set(graph, vlist):
 
 
 def independent_set(graph):
-    for i in range(len(graph.vertices()) + 1, 0, -1):
-        for comb in combinations(graph.vertices(), i):
+    for i in range(len(graph.vertices) + 1, 0, -1):
+        for comb in combinations(graph.vertices, i):
             if is_independent_set(graph, set(comb)):
                 return comb
     return None
 
 
 def inverse_graph(g):
-    all_edges = complete_edges(g.vertices())
-    inverse_edges = list(set(all_edges) - set(g.edges()))
+    all_edges = complete_edges(g.vertices)
+    inverse_edges = list(set(all_edges) - set(g.edges))
     invg = Graph()
     for edge in inverse_edges:
         invg.add_single_edge(edge[0], edge[1])
-    other_vertices = set(g.vertices()) - set(invg.vertices())  # vertices without edge
+    other_vertices = set(g.vertices) - set(invg.vertices)  # vertices without edge
     for v in other_vertices:
         invg.add_vertex(v)
     return invg
@@ -554,10 +579,10 @@ def transpose(g):
     else:
         gt = Digraph()
 
-    for v in g.vertices():
+    for v in g.vertices:
         gt.add_vertex(v)
-    for v1, v2 in g.edges():
-        gt.add_single_edge(v2, v1, g.get_weight(v1, v2))
+    for v1, v2 in g.edges:
+        gt.add_single_edge(v2, v1, g.weight(v1, v2))
     return gt
 
 
@@ -588,7 +613,7 @@ def articulation_point(g):
     low = {}
     parent = {}
     art_pts = []
-    for v in g.vertices():
+    for v in g.vertices:
         if v not in visited:
             visited.add(v)
             _articulation_point(g, v)
@@ -713,7 +738,7 @@ if __name__ == '__main__':
 
     g = complete_graph(10)
     print(g)
-    print(len(g.edges()))
+    print(len(g.edges))
     g = grid_2d_graph(2, 3)
     print(g)
 
@@ -729,7 +754,7 @@ if __name__ == '__main__':
 
     g = complete_graph(10, alpha=True)
     print(g)
-    print(len(g.edges()))
+    print(len(g.edges))
 
     # g = Graph()  # clrs kruskal example
     # g.add_edge('a', 'b', weight=4)
@@ -772,7 +797,7 @@ if __name__ == '__main__':
     dg.add_edge('a', 'b')
     dg.add_edge('a', 'c')
     print(dg)
-    print(dg.edges())
+    print(dg.edges)
     print(is_directed_acyclic(dg))
 
     g = Graph()
