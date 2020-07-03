@@ -6,7 +6,7 @@ from Graph import Graph
 def bfs(g, source):
     dist = defaultdict(int)  # distances from source to vertex
     pred = defaultdict()  # predecessors of vertex
-    for v in g.vertices():  # initialize
+    for v in g.vertices:  # initialize
         dist[v] = sys.maxsize
         pred[v] = None
     dist[source] = 0
@@ -19,13 +19,13 @@ def bfs(g, source):
         for nb in g.neighbors(v):
             if nb not in visited:
                 tree_edges.append((v, nb))
-                dist[nb] = dist[v] + g.get_weight(v, nb)
+                dist[nb] = dist[v] + g.weight(v, nb)
                 pred[nb] = v
                 queue.append(nb)
                 visited.add(nb)
 
     # print all paths
-    for v in g.vertices():
+    for v in g.vertices:
         if v == source:
             continue
         if dist[v] == sys.maxsize:  # no path exists from source to v
@@ -45,7 +45,7 @@ def bfs(g, source):
 def bfs_print_vertices(g):
     visited = set()
     queue = []
-    for v in g.vertices():
+    for v in g.vertices:
         if v not in visited:
             print(v, end=' ')
             queue = [v]
@@ -125,8 +125,8 @@ if __name__ == '__main__':
     g.add_edge('x', 'y')
 
     print('Graph   :', g)
-    print('Vertices:', g.vertices())
-    print('Edges   :', g.edges())
+    print('Vertices:', g.vertices)
+    print('Edges   :', g.edges)
     print('Weights :', g.weights)
 
     print('bfs print vertices ', end='')
