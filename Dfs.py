@@ -36,16 +36,16 @@ def dfs(g):
     forward_edges = []
     cross_edges = []
 
-    for v in g.vertices():  # initialize
+    for v in g.vertices:  # initialize
         color[v] = WHITE
         pred[v] = None
 
-    for v in g.vertices():  # main loop
+    for v in g.vertices:  # main loop
         if color[v] == WHITE:
             _dfs(g, v)
 
     # dfs traversal done, print all relevant info
-    for v in g.vertices():
+    for v in g.vertices:
         print(f'Vertex {v} - Dicovery/Finish time: {dtime[v]:2}/{ftime[v]:2}'
               f'   Predecessor: {pred[v]}')
     print(f'Tree edges   : {tree_edges}')
@@ -56,19 +56,19 @@ def dfs(g):
 
 
 def dfs_print_vertices(g):
-    def _dfs_print_vertices(g, vertex):
+    def dfs(g, vertex):
         for nb in g.neighbors(vertex):
             if nb not in visited:
                 print(nb, end=' ')
                 visited.add(nb)
-                _dfs_print_vertices(g, nb)
+                dfs(g, nb)
 
     visited = set()
-    for v in g.vertices():
+    for v in g.vertices:
         if v not in visited:
             print(v, end=' ')
             visited.add(v)
-            _dfs_print_vertices(g, v)
+            dfs(g, v)
     print('')
 
 
@@ -82,7 +82,7 @@ def dfs_vertices(g):
 
     dfs_vert_arr = []
     visited = set()
-    for v in g.vertices():
+    for v in g.vertices:
         if v not in visited:
             dfs_vert_arr.append(v)
             visited.add(v)
@@ -93,7 +93,7 @@ def dfs_vertices(g):
 def dfs_print_vertices_iterative(g):
     visited = set()
     stack = []
-    for v in g.vertices():
+    for v in g.vertices:
         if v not in visited:
             visited.add(v)
             stack = [v]
@@ -119,7 +119,7 @@ def dfs_print_vertices_iterative(g):
 #                     stack.append(nb)
 #
 #     visited = set()
-#     for v in g.vertices():
+#     for v in g.vertices:
 #         if v not in visited:
 #             visited.add(v)
 #             _dfs_print_vertices_iterative(g, v)
@@ -182,16 +182,16 @@ def dfs_all_paths(g, source, target):
 #     dtime = {}  # discovery time
 #     ftime = {}  # finishing time
 #     pred = defaultdict()  # predecessors of vertex
-#     for vertex in graph.vertices():  # initialize
+#     for vertex in graph.vertices:  # initialize
 #         pred[vertex] = None
 #
-#     for vertex in graph.vertices():
+#     for vertex in graph.vertices:
 #         if vertex not in visited:
 #             visited.add(vertex)
 #             _dfs(graph, vertex)
 #
 #     # print dfs paths
-#     for vertex in graph.vertices():
+#     for vertex in graph.vertices:
 #         if vertex == source:
 #             continue
 #         dfs_path = deque(vertex)
@@ -220,8 +220,8 @@ if __name__ == '__main__':
     dg.add_edge('z', 'z')
 
     print('Digraph:', dg)
-    print('Vertices:', dg.vertices())
-    print('Edges:', dg.edges())
+    print('Vertices:', dg.vertices)
+    print('Edges:', dg.edges)
     print('')
 
     print('dfs print ', end='')
