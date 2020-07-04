@@ -26,12 +26,13 @@ def topological_sort(g):
     return sortedv
 
 
-dress_order = [['shirt', 'tie'], ['tie', 'jacket'], ['belt', 'jacket'], ['shirt', 'belt'],
-               ['undershorts', 'pants'], ['pants', 'shoes'], ['socks', 'shoes']]
-g = Digraph()
-g.add_edges_from(dress_order)
-g.add_vertex('jacket')
-g.add_vertex('watch')
-g.add_vertex('shoes')
-print(g)
-print(topological_sort(g))
+if __name__ == '__main__':
+    dress_order = [['shirt', 'tie'], ['tie', 'jacket'], ['belt', 'jacket'], ['shirt', 'belt'],
+                   ['undershorts', 'pants'], ['pants', 'shoes'], ['socks', 'shoes']]
+    g = Digraph()
+    g.add_edges_from(dress_order)
+    g.add_vertex('jacket')
+    g.add_vertex('watch')
+    g.add_vertex('shoes')
+    print(g)
+    print(topological_sort(g))
