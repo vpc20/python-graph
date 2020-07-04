@@ -12,6 +12,7 @@ def transpose(g):
     return gt
 
 
+
 if __name__ == '__main__':
     g = Digraph()
     g.add_edges_from([('a', 'b'), ('b', 'c'), ('b', 'e'), ('b', 'f'), ('c', 'd'), ('c', 'g'), ('d', 'c'),
