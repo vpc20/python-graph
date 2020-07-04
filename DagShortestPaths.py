@@ -19,8 +19,8 @@ def dag_sssp(g, source):
 
     for v1 in sorted_v:
         for v2 in g.neighbors(v1):
-            if dist[v1] + g.get_weight(v1, v2) < dist[v2]:  # relaxation
-                dist[v2] = dist[v1] + g.get_weight(v1, v2)
+            if dist[v1] + g.weight(v1, v2) < dist[v2]:  # relaxation
+                dist[v2] = dist[v1] + g.weight(v1, v2)
                 pred[v2] = v1
 
     for v in g.vertices():  # generate all shortest paths

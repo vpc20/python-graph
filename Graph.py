@@ -220,23 +220,23 @@ def is_connected(g):
     # return len(vset) == 0
 
 
-def is_undirected_cyclic(g):
-    djset = DisjointSet()
-
-    for v in g.vertices:
-        djset.make_set(v)
-
-    eset = set()
-    for v1, v2 in g.edges:
-        if (v2, v1) not in eset:
-            eset.add((v1, v2))
-
-    for v1, v2 in eset:
-        if djset.find_set(v1) != djset.find_set(v2):
-            djset.union(v1, v2)
-        else:
-            return True
-    return False
+# def is_undirected_cyclic(g):
+#     djset = DisjointSet()
+#
+#     for v in g.vertices:
+#         djset.make_set(v)
+#
+#     eset = set()
+#     for v1, v2 in g.edges:
+#         if (v2, v1) not in eset:
+#             eset.add((v1, v2))
+#
+#     for v1, v2 in eset:
+#         if djset.find_set(v1) != djset.find_set(v2):
+#             djset.union(v1, v2)
+#         else:
+#             return True
+#     return False
 
 
 # def is_undirected_cyclic(g):
@@ -255,75 +255,46 @@ def is_undirected_cyclic(g):
 #     return False
 
 
-def is_directed_cyclic(g):  # dfs traversal
-    def _is_cyclic(graph, v):
-        cycle_stack.append(v)
-        for neighbor in graph.neighbors(v):
-            if neighbor in cycle_stack:
-                return True
-            if neighbor not in visited:
-                visited.add(neighbor)
-                if _is_cyclic(graph, neighbor):
-                    return True
-        cycle_stack.pop()
-
-    visited = set()
-    cycle_stack = []
-    for v in g.vertices:
-        if v not in visited:
-            visited.add(v)
-            if _is_cyclic(g, v):
-                return False
-    return False
-
-
-def is_directed_cyclic_bfs(g):
-    visited = set()
-    queue = []
-    for v in g.vertices():
-        if v not in visited:
-            queue = [v]
-            visited.add(v)
-        cycles = set()
-        while queue:
-            vertex = queue.pop(0)
-            cycles.add(vertex)
-            for nb in g.neighbors(vertex):
-                if nb in cycles:
-                    return True
-                if nb not in visited:
-                    queue.append(nb)
-                    visited.add(nb)
-    return False
+# def is_directed_cyclic(g):  # dfs traversal
+#     def _is_cyclic(graph, v):
+#         cycle_stack.append(v)
+#         for neighbor in graph.neighbors(v):
+#             if neighbor in cycle_stack:
+#                 return True
+#             if neighbor not in visited:
+#                 visited.add(neighbor)
+#                 if _is_cyclic(graph, neighbor):
+#                     return True
+#         cycle_stack.pop()
+#
+#     visited = set()
+#     cycle_stack = []
+#     for v in g.vertices:
+#         if v not in visited:
+#             visited.add(v)
+#             if _is_cyclic(g, v):
+#                 return False
+#     return False
 
 
-def is_directed_acyclic(g):
-    """
-    A directed acyclic graph is a directed graph with no cycles.
-
-    :param g: directed graph
-    :return: True if graph is a DAG, otherwise False
-    """
-
-    def _dfs(g, v):
-        color[v] = GRAY
-        for nb in g.neighbors(v):
-            if color[nb] == WHITE:
-                return _dfs(g, nb)
-            elif color[nb] == GRAY:
-                return False
-        color[v] = BLACK
-        return True
-
-    if not isinstance(g, Digraph):
-        return False
-
-    WHITE, GRAY, BLACK = 1, 2, 3  # unexplored, under exploration, explored
-    color = {v: WHITE for v in g.vertices}  # vertex color
-
-    for v in g.vertices:  # main loop
-        if color[v] == WHITE:
-            return _dfs(g, v)
+# def is_directed_cyclic_bfs(g):
+#     visited = set()
+#     queue = []
+#     for v in g.vertices():
+#         if v not in visited:
+#             queue = [v]
+#             visited.add(v)
+#         cycles = set()
+#         while queue:
+#             vertex = queue.pop(0)
+#             cycles.add(vertex)
+#             for nb in g.neighbors(vertex):
+#                 if nb in cycles:
+#                     return True
+#                 if nb not in visited:
+#                     queue.append(nb)
+#                     visited.add(nb)
+#     return False
 
 
 def is_forest(g):
@@ -572,18 +543,6 @@ def inverse_graph(g):
         invg.add_vertex(v)
     return invg
 
-
-def transpose(g):
-    if isinstance(g, Graph):
-        gt = Graph()
-    else:
-        gt = Digraph()
-
-    for v in g.vertices:
-        gt.add_vertex(v)
-    for v1, v2 in g.edges:
-        gt.add_single_edge(v2, v1, g.weight(v1, v2))
-    return gt
 
 
 def articulation_point(g):

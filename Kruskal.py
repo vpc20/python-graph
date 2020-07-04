@@ -12,14 +12,14 @@ def mst_kruskal(graph):
 
     edges_by_weight = []
     for v1, v2 in graph.edges():
-        edges_by_weight.append((v1, v2, graph.get_weight(v1, v2)))
+        edges_by_weight.append((v1, v2, graph.weight(v1, v2)))
     edges_by_weight.sort(key=lambda e: e[2])  # sort by weight
 
     for v1, v2, _ in edges_by_weight:
         if djset.find_set(v1) != djset.find_set(v2):
             djset.union(v1, v2)
             mst_edges.append((v1, v2))
-            mst_weight += graph.get_weight(v1, v2)
+            mst_weight += graph.weight(v1, v2)
     return mst_weight, mst_edges
 
 
@@ -49,7 +49,7 @@ if __name__ == '__main__':
     g = Graph()
 
     # cp 4.10 in https://visualgo.net/en/mst
-    g.adj_list = {0: [1, 4, 3, 2], 1: [0, 2], 4: [0, 3], 3: [0, 2, 4], 2: [0, 1, 3]}
+    g.adj = {0: [1, 4, 3, 2], 1: [0, 2], 4: [0, 3], 3: [0, 2, 4], 2: [0, 1, 3]}
     g.weights = {(0, 1): 4, (1, 0): 4, (1, 2): 2, (2, 1): 2, (2, 3): 8, (3, 2): 8, (3, 4): 9, (4, 3): 9, (0, 4): 6,
                  (4, 0): 6, (0, 3): 6, (3, 0): 6, (0, 2): 4, (2, 0): 4}
     print(mst_kruskal(g))

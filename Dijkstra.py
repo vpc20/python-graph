@@ -16,7 +16,7 @@ def dijkstra_sssp(g, source):
     while minq:
         _, v1 = heappop(minq)
         for v2 in g.neighbors(v1):
-            d = dist[v1] + g.get_weight(v1, v2)
+            d = dist[v1] + g.weight(v1, v2)
             if d < dist[v2]:  # relaxation
                 dist[v2] = d
                 pred[v2] = v1

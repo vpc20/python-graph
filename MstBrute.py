@@ -15,7 +15,7 @@ def mst_brute(g):
             g1 = Graph()
             g1.add_edges_from(comb)
             if is_spanning_tree(g, comb):
-                wsum = sum([g.get_weight(v1, v2) for v1, v2 in comb])
+                wsum = sum([g.weight(v1, v2) for v1, v2 in comb])
                 if wsum < minw:
                     minw = wsum
                     min_edges = comb
@@ -50,3 +50,21 @@ if __name__ == '__main__':
     # print(g)
     # print(is_connected(g))
     # print(is_undirected_cyclic(g))
+
+    # clrs Prim example
+    g = Graph()
+    g.add_edge('a', 'b', 4)
+    g.add_edge('a', 'h', 8)
+    g.add_edge('b', 'c', 8)
+    g.add_edge('b', 'h', 11)
+    g.add_edge('c', 'd', 7)
+    g.add_edge('c', 'f', 4)
+    g.add_edge('c', 'i', 2)
+    g.add_edge('i', 'g', 6)
+    g.add_edge('i', 'h', 7)
+    g.add_edge('f', 'd', 14)
+    g.add_edge('f', 'e', 10)
+    g.add_edge('f', 'g', 2)
+    g.add_edge('e', 'd', 9)
+    g.add_edge('g', 'h', 1)
+    print(mst_brute(g))

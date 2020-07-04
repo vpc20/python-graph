@@ -16,8 +16,8 @@ def bellman_ford_sssp(g, source):
 
     for _ in range(len(g.vertices()) - 1):
         for v1, v2 in g.edges():
-            if dist[v1] + g.get_weight(v1, v2) < dist[v2]:  # relaxation
-                dist[v2] = dist[v1] + g.get_weight(v1, v2)
+            if dist[v1] + g.weight(v1, v2) < dist[v2]:  # relaxation
+                dist[v2] = dist[v1] + g.weight(v1, v2)
                 pred[v2] = v1
 
     # for v1, v2 in g.edges():  # check for negative cycles
