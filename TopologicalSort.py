@@ -5,16 +5,15 @@
 # precedences among events.
 
 from collections import deque
-
 from Graph import Digraph
 
 
 def topological_sort(g):
     def dfs(g, u):
+        seen.add(u)
         for v in g.neighbors(u):
             if v not in seen:
                 dfs(g, v)
-                seen.add(v)
         sortedv.appendleft(u)
 
     seen = set()
@@ -22,7 +21,6 @@ def topological_sort(g):
     for u in g.vertices:
         if u not in seen:
             dfs(g, u)
-            seen.add(u)
     return sortedv
 
 
