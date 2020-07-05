@@ -56,55 +56,53 @@ def dfs(g):
 
 
 def dfs_print_vertices(g):
-    def dfs(g, vertex):
-        for nb in g.neighbors(vertex):
-            if nb not in visited:
-                print(nb, end=' ')
-                visited.add(nb)
-                dfs(g, nb)
+    def dfs(g, u):
+        seen.add(u)
+        for v in g.neighbors(u):
+            if v not in seen:
+                print(v, end=' ')
+                dfs(g, v)
 
-    visited = set()
-    for v in g.vertices:
-        if v not in visited:
-            print(v, end=' ')
-            visited.add(v)
-            dfs(g, v)
+    seen = set()
+    for u in g.vertices:
+        if u not in seen:
+            print(u, end=' ')
+            dfs(g, u)
+    print('')
+
+
+def dfs_print_vertices_iterative(g):
+    seen = set()
+    stack = []
+    for u in g.vertices:
+        if u not in seen:
+            seen.add(u)
+            stack = [u]
+        while stack:
+            u = stack.pop()
+            print(u, end=' ')
+            for v in g.neighbors(u):
+                if v not in seen:
+                    seen.add(v)
+                    stack.append(v)
     print('')
 
 
 def dfs_vertices(g):
-    def _dfs_vertices(g, vertex):
-        for nb in g.neighbors(vertex):
-            if nb not in visited:
-                dfs_vert_arr.append(nb)
-                visited.add(nb)
-                _dfs_vertices(g, nb)
+    def dfs(g, u):
+        seen.add(u)
+        for v in g.neighbors(u):
+            if v not in seen:
+                dfs_arr.append(v)
+                dfs(g, v)
 
-    dfs_vert_arr = []
-    visited = set()
-    for v in g.vertices:
-        if v not in visited:
-            dfs_vert_arr.append(v)
-            visited.add(v)
-            _dfs_vertices(g, v)
-    return dfs_vert_arr
-
-
-def dfs_print_vertices_iterative(g):
-    visited = set()
-    stack = []
-    for v in g.vertices:
-        if v not in visited:
-            visited.add(v)
-            stack = [v]
-        while stack:
-            vertex = stack.pop()
-            print(vertex, end=' ')
-            for nb in g.neighbors(vertex):
-                if nb not in visited:
-                    visited.add(nb)
-                    stack.append(nb)
-    print('')
+    dfs_arr = []
+    seen = set()
+    for u in g.vertices:
+        if u not in seen:
+            dfs_arr.append(u)
+            dfs(g, u)
+    return dfs_arr
 
 
 # def dfs_print_vertices_iterative(g):
@@ -126,42 +124,42 @@ def dfs_print_vertices_iterative(g):
 #     print('')
 
 
-def dfs_path(g, source, target):
-    def _dfs_path(g, source, target):
-        for nb in g.neighbors(source):
-            if nb == target:
-                path.append(nb)
-                return True
-            elif nb not in visited:
-                visited.add(nb)
-                path.append(nb)
-                if _dfs_path(g, nb, target):
-                    return True
-                path.pop()
-        return False
+# def dfs_path(g, source, target):
+#     def _dfs_path(g, source, target):
+#         for nb in g.neighbors(source):
+#             if nb == target:
+#                 path.append(nb)
+#                 return True
+#             elif nb not in visited:
+#                 visited.add(nb)
+#                 path.append(nb)
+#                 if _dfs_path(g, nb, target):
+#                     return True
+#                 path.pop()
+#         return False
+#
+#     visited = set(source)
+#     path = [source]
+#     _dfs_path(g, source, target)
+#     return path if len(path) > 1 else []
 
-    visited = set(source)
-    path = [source]
-    _dfs_path(g, source, target)
-    return path if len(path) > 1 else []
 
-
-def dfs_all_paths(g, source, target):
-    def _dfs_all_paths(g, source, target):
-        for nb in g.neighbors(source):
-            if nb == target:
-                all_paths.append(path + [nb])
-            elif nb not in visited:
-                visited.add(nb)
-                path.append(nb)
-                _dfs_all_paths(g, nb, target)
-                path.pop()
-
-    all_paths = []
-    path = [source]
-    visited = set(source)
-    _dfs_all_paths(g, source, target)
-    return all_paths
+# def dfs_all_paths(g, source, target):
+#     def _dfs_all_paths(g, source, target):
+#         for nb in g.neighbors(source):
+#             if nb == target:
+#                 all_paths.append(path + [nb])
+#             elif nb not in visited:
+#                 visited.add(nb)
+#                 path.append(nb)
+#                 _dfs_all_paths(g, nb, target)
+#                 path.pop()
+#
+#     all_paths = []
+#     path = [source]
+#     visited = set(source)
+#     _dfs_all_paths(g, source, target)
+#     return all_paths
 
 
 # def dfs(graph, source):
@@ -229,11 +227,11 @@ if __name__ == '__main__':
     print('dfs print iterative ', end='')
     dfs_print_vertices_iterative(dg)
 
-    print("dfs path from 'y' to 'v' ==> ", end='')
-    print(dfs_path(dg, 'y', 'v'))
-    print("dfs all paths from 'u' to 'v'  ==> ", end='')
-    print(dfs_all_paths(dg, 'u', 'v'))
-    print('')
+    # print("dfs path from 'y' to 'v' ==> ", end='')
+    # print(dfs_path(dg, 'y', 'v'))
+    # print("dfs all paths from 'u' to 'v'  ==> ", end='')
+    # print(dfs_all_paths(dg, 'u', 'v'))
+    # print('')
 
     print('dfs')
     dfs(dg)
