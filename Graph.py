@@ -42,6 +42,10 @@ class Graph:
     def add_vertex(self, vertex):
         self.adj[vertex] = []
 
+    def add_vertices_from(self, verts):
+        for v in verts:
+            self.add_vertex(v)
+
     def remove_vertex(self, vertex):
         self.adj.pop(vertex)
         for k, v in self.adj.items():
@@ -335,27 +339,27 @@ def is_tree(g):
     return is_forest(g) and is_connected(g)
 
 
-def is_spanning_tree(g, edges):
-    """
-    The spanning tree is a set of edges which connects all of the vertices to form a tree
-    (an acyclic graph). The spanning tree with the smallest total weight of edges is the
-    minimum spanning tree.
-
-    :param g: input graph
-    :param edges: list of edges for spanning tree checking
-    """
-    vset = set(g.vertices)
-    for v1, v2 in edges:
-        if v1 in vset:
-            vset.remove(v1)
-        if v2 in vset:
-            vset.remove(v2)
-    if len(vset) != 0:
-        return False
-
-    g1 = Graph()
-    g1.add_edges_from(edges)
-    return is_connected(g1) and not is_undirected_cyclic(g1)
+# def is_spanning_tree(g, edges):
+#     """
+#     The spanning tree is a set of edges which connects all of the vertices to form a tree
+#     (an acyclic graph). The spanning tree with the smallest total weight of edges is the
+#     minimum spanning tree.
+#
+#     :param g: input graph
+#     :param edges: list of edges for spanning tree checking
+#     """
+#     vset = set(g.vertices)
+#     for v1, v2 in edges:
+#         if v1 in vset:
+#             vset.remove(v1)
+#         if v2 in vset:
+#             vset.remove(v2)
+#     if len(vset) != 0:
+#         return False
+#
+#     g1 = Graph()
+#     g1.add_edges_from(edges)
+#     return is_connected(g1) and not is_undirected_cyclic(g1)
 
 
 def is_bipartite_bfs(graph):
@@ -544,7 +548,6 @@ def inverse_graph(g):
     return invg
 
 
-
 def articulation_point(g):
     def _articulation_point(g, v):
         nonlocal time
@@ -594,7 +597,7 @@ if __name__ == '__main__':
     g.add_edge('x', 'y')
     g.add_edge('x', 'z')
 
-    print(is_directed_cyclic(g))
+    # print(is_directed_cyclic(g))
 
     # g.add_edge('a', 'b')
     # g.add_edge('a', 'c')
@@ -741,23 +744,23 @@ if __name__ == '__main__':
     # g.add_edge('d', 'e', weight=9)
     # g.add_edge('e', 'f', weight=10)
 
-    print(is_undirected_cyclic(g))
-    print(is_spanning_tree(g, [('a', 'b'), ('c', 'd')]))
+    # print(is_undirected_cyclic(g))
+    # print(is_spanning_tree(g, [('a', 'b'), ('c', 'd')]))
 
     # print(gen_all_graphs(5))
 
-    g1 = Graph()
-    g1.add_edges_from([('a', 'b'), ('b', 'c'), ('c', 'a')])
+    # g1 = Graph()
+    # g1.add_edges_from([('a', 'b'), ('b', 'c'), ('c', 'a')])
     # g1.add_edges_from([('a', 'b'), ('b', 'c')])
-    print(g1)
-    print(is_undirected_cyclic(g1))
+    # print(g1)
+    # print(is_undirected_cyclic(g1))
 
-    dg = Digraph()
-    dg.add_edge('a', 'b')
-    dg.add_edge('a', 'c')
-    print(dg)
-    print(dg.edges)
-    print(is_directed_acyclic(dg))
+    # dg = Digraph()
+    # dg.add_edge('a', 'b')
+    # dg.add_edge('a', 'c')
+    # print(dg)
+    # print(dg.edges)
+    # print(is_directed_acyclic(dg))
 
     g = Graph()
     # g.add_vertex(0)
