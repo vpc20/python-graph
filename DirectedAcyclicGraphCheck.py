@@ -1,3 +1,4 @@
+import sys
 from collections import defaultdict, deque
 
 from Graph import Digraph
@@ -40,15 +41,14 @@ def is_directed_acyclic_graph(g):
 
 def is_directed_acyclic_dfs(g):
     def dfs(g, u):
+        seen.add(u)
         cycles.add(u)
         for v in g.neighbors(u):
             if v not in seen:
-                seen.add(v)
                 if not dfs(g, v):
                     return False
-            else:
-                if v in cycles:  # back edge
-                    return False
+            elif v in cycles:  # back edge
+                return False
         cycles.remove(u)
         return True
 
@@ -59,10 +59,30 @@ def is_directed_acyclic_dfs(g):
     cycles = set()
     for u in g.vertices:
         if u not in seen:
-            seen.add(u)
             if not dfs(g, u):
                 return False
     return True
+
+
+# def is_directed_acyclic_dfs_iter(g):
+#     seen = set()
+#     cycles = set()
+#     stack = []
+#     for u in g.vertices:
+#         if u not in seen:
+#             seen.add(u)
+#             stack = [u]
+#         while stack:
+#             u = stack.pop()
+#             cycles.add(u)
+#             for v in g.neighbors(u):
+#                 if v not in seen:
+#                     seen.add(v)
+#                     stack.append(v)
+#                 elif v in cycles:
+#                     return False
+#             cycles.remove(u)
+#     return True
 
 
 # def is_directed_acyclic_bfs(g):
@@ -91,24 +111,27 @@ def is_directed_acyclic_dfs(g):
 #     return True
 
 
-# def is_directed_acyclic_bfs(g):
+# def is_directed_acyclic_bfs2(g):
+#     dtime = defaultdict(int)  # discovery time
+#     for u in g.vertices:
+#         dtime[u] = sys.maxsize
+#     dtime[g.vertices[0]] = 0
+#
 #     seen = set()
-#     cycles = set()
 #     queue = deque()
 #     for u in g.vertices:
 #         if u not in seen:
-#             queue = deque([u])
 #             seen.add(u)
-#             cycles = {u}
+#             queue = deque([u])
 #         while queue:
-#             for _ in range(len(queue)):
-#                 u = queue.popleft()
-#                 for v in g.neighbors(u):
-#                     if v not in seen:
-#                         queue.append(v)
-#                         seen.add(v)
-#                         cycles.add(v)
-#                     else:
+#             u = queue.popleft()
+#             for v in g.neighbors(u):
+#                 if v not in seen:
+#                     seen.add(v)
+#                     dtime[v] = dtime[u] + 1
+#                     queue.append(v)
+#                 else:
+#                     if 0 <= dtime[v] <= dtime[u]:
 #                         return False
 #     return True
 
@@ -160,8 +183,20 @@ if __name__ == '__main__':
 
     g3 = Digraph()
     g3.add_edges_from([(0, 1), (0, 2), (1, 2)])
+    g3.add_vertex(2)
     assert is_directed_acyclic_bfs(g3) is True
+    # assert is_directed_acyclic_bfs2(g3) is True
 
     g4 = Digraph()
     g4.add_edges_from([(0, 1), (1, 0)])
     assert is_directed_acyclic_bfs(g4) is False
+    # assert is_directed_acyclic_dfs_iter(g4) is False
+
+    # g5 = Digraph()
+    # g5.add_edges_from([(0, 1), (1, 0)])
+    # assert is_directed_acyclic_dfs_iter(g5) is False
+    #
+    # g6 = Digraph()
+    # g6.add_vertices_from([0, 1])
+    # g6.add_edges_from([(0, 1)])
+    # assert is_directed_acyclic_dfs_iter(g6) is True

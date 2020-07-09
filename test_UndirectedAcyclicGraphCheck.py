@@ -7,7 +7,7 @@ from UndirectedAcyclicGraphCheck import is_undirected_acyclic_dfs, is_undirected
 
 class Test(TestCase):
     def test_is_undirected_acyclic(self):
-        for _ in range(10000):
+        for _ in range(1000):
             nxg = nx.fast_gnp_random_graph(randint(1, 10), randint(1, 9) / 10, directed=False)
             # nxg = nx.fast_gnp_random_graph(randint(1, 5), randint(1, 9) / 10, directed=False)
             print(sorted(nxg.nodes))

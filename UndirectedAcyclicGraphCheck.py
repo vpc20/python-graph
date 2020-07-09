@@ -78,6 +78,12 @@ if __name__ == '__main__':
     assert is_undirected_acyclic_dfs(g) is True
 
     g = Graph()
+    g.add_edges_from([(0, 1), (0, 2), (1, 2)])
+    print(g)
+    assert is_undirected_acyclic_dfs(g) is False
+
+    g = Graph()
     g.add_edges_from([(0, 1), (0, 2), (1, 3)])
     print(g)
     assert is_undirected_acyclic_bfs(g) is True
+

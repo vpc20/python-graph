@@ -7,8 +7,9 @@ from DirectedAcyclicGraphCheck import is_directed_acyclic_graph, is_directed_acy
 
 class Test(TestCase):
     def test_is_directed_acyclic_graph(self):
-        for _ in range(10000):
+        for _ in range(1000):
             nxg = nx.fast_gnp_random_graph(randint(1, 10), randint(1, 9) / 10, directed=True)
+            # nxg = nx.fast_gnp_random_graph(randint(1, 3),5 / 10, directed=True)
             print(sorted(nxg.nodes))
             print(sorted(nxg.edges))
 
@@ -23,4 +24,5 @@ class Test(TestCase):
             print(nx.is_directed_acyclic_graph(nxg))
             assert nx.is_directed_acyclic_graph(nxg) == is_directed_acyclic_graph(g)
             assert nx.is_directed_acyclic_graph(nxg) == is_directed_acyclic_dfs(g)
+            # assert nx.is_directed_acyclic_graph(nxg) == is_directed_acyclic_dfs_iter(g)
             assert nx.is_directed_acyclic_graph(nxg) == is_directed_acyclic_bfs(g)
