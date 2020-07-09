@@ -2,70 +2,26 @@ from DisjointSet import DisjointSet
 from Graph import Graph
 
 
-def mst_kruskal(graph):
+def mst_kruskal(g):
     djset = DisjointSet()
-    mst_weight = 0
-    mst_edges = []
+    mst = Graph()
 
-    for v in graph.vertices():
-        djset.make_set(v)
+    for u in g.vertices:
+        djset.make_set(u)
 
-    edges_by_weight = []
-    for v1, v2 in graph.edges():
-        edges_by_weight.append((v1, v2, graph.weight(v1, v2)))
-    edges_by_weight.sort(key=lambda e: e[2])  # sort by weight
+    for u, v in sorted(g.edges, key=lambda e: g.weight(e[0], e[1])):
+        if djset.find_set(u) != djset.find_set(v):
+            djset.union(u, v)
+            mst.add_edge(u, v, g.weight(u, v))
+    return mst
 
-    for v1, v2, _ in edges_by_weight:
-        if djset.find_set(v1) != djset.find_set(v2):
-            djset.union(v1, v2)
-            mst_edges.append((v1, v2))
-            mst_weight += graph.weight(v1, v2)
-    return mst_weight, mst_edges
-
-
-# def mst_kruskal(graph):
-#     djset = DisjointSet()
-#     mst_weight = 0
-#     mst_edges = []
-#
-#     vertex_seq = defaultdict(str)
-#     for i, vertex in enumerate(graph.vertices()):
-#         vertex_seq[vertex] = i
-#         djset.make_set(i)
-#
-#     edges_by_weight = []
-#     for v1, v2 in graph.edges():
-#         edges_by_weight.append((v1, v2, graph.get_weight(v1, v2)))
-#     edges_by_weight.sort(key=lambda e: e[2])  # sort by weight
-#
-#     for v1, v2, _ in edges_by_weight:
-#         if djset.find_set(vertex_seq[v1]) != djset.find_set(vertex_seq[v2]):
-#             djset.union(vertex_seq[v1], vertex_seq[v2])
-#             mst_edges.append((v1, v2))
-#             mst_weight += graph.get_weight(v1, v2)
-#     return mst_weight, mst_edges
 
 if __name__ == '__main__':
     g = Graph()
+    g.add_weighted_edges_from([('a', 'b', 4), ('a', 'h', 8), ('b', 'c', 8), ('b', 'h', 11), ('c', 'd', 7),
+                               ('c', 'f', 4), ('c', 'i', 2), ('i', 'g', 6), ('i', 'h', 7), ('f', 'd', 14),
+                               ('f', 'e', 10), ('f', 'g', 2), ('e', 'd', 9), ('g', 'h', 1)])
+    mst = mst_kruskal(g)
+    print(mst.edges)
+    print(sum([mst.weight(u, v) for u, v in mst.edges]))
 
-    # cp 4.10 in https://visualgo.net/en/mst
-    g.adj = {0: [1, 4, 3, 2], 1: [0, 2], 4: [0, 3], 3: [0, 2, 4], 2: [0, 1, 3]}
-    g.weights = {(0, 1): 4, (1, 0): 4, (1, 2): 2, (2, 1): 2, (2, 3): 8, (3, 2): 8, (3, 4): 9, (4, 3): 9, (0, 4): 6,
-                 (4, 0): 6, (0, 3): 6, (3, 0): 6, (0, 2): 4, (2, 0): 4}
-    print(mst_kruskal(g))
-
-    # g = complete_graph(10)
-    # print(mst_kruskal(g))
-
-    g = Graph()  # clrs kruskal example
-    g.add_edge('a', 'b', weight=4)
-    g.add_edge('b', 'c', weight=8)
-    g.add_edge('c', 'd', weight=7)
-    g.add_edge('c', 'f', weight=4)
-    g.add_edge('d', 'e', weight=9)
-    g.add_edge('e', 'f', weight=10)
-    g.add_edge('f', 'g', weight=10)
-    # g.add_edge('g', 'h', weight=10)
-
-
-    print(mst_kruskal(g))
