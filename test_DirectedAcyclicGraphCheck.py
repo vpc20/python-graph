@@ -2,7 +2,8 @@ from random import randint
 from unittest import TestCase
 import networkx as nx
 import Graph as gx
-from DirectedAcyclicGraphCheck import is_directed_acyclic_graph, is_directed_acyclic_dfs, is_directed_acyclic_bfs
+from DirectedAcyclicGraphCheck import is_directed_acyclic_graph, is_directed_acyclic_dfs, is_directed_acyclic_bfs, \
+    is_directed_acyclic_dfs_iter
 
 
 class Test(TestCase):
@@ -14,10 +15,8 @@ class Test(TestCase):
             print(sorted(nxg.edges))
 
             g = gx.Digraph()
-            for node in nxg.nodes:
-                g.add_vertex(node)
-            for u, v in nxg.edges:
-                g.add_edge(u, v)
+            g.add_vertices_from(nxg.nodes)
+            g.add_edges_from(nxg.edges)
             print(sorted(g.vertices))
             print(sorted(g.edges))
 

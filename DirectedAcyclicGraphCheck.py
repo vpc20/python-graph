@@ -64,25 +64,25 @@ def is_directed_acyclic_dfs(g):
     return True
 
 
-# def is_directed_acyclic_dfs_iter(g):
-#     seen = set()
-#     cycles = set()
-#     stack = []
-#     for u in g.vertices:
-#         if u not in seen:
-#             seen.add(u)
-#             stack = [u]
-#         while stack:
-#             u = stack.pop()
-#             cycles.add(u)
-#             for v in g.neighbors(u):
-#                 if v not in seen:
-#                     seen.add(v)
-#                     stack.append(v)
-#                 elif v in cycles:
-#                     return False
-#             cycles.remove(u)
-#     return True
+def is_directed_acyclic_dfs_iter(g):
+    seen = set()
+    cycles = set()
+    stack = []
+    for u in g.vertices:
+        if u not in seen:
+            seen.add(u)
+            stack = [u]
+            cycles.clear()
+        while stack:
+            u = stack.pop()
+            cycles.add(u)
+            for v in g.neighbors(u):
+                if v not in seen:
+                    seen.add(v)
+                    stack.append(v)
+                elif v in cycles:
+                    return False
+    return True
 
 
 # def is_directed_acyclic_bfs(g):
@@ -111,29 +111,29 @@ def is_directed_acyclic_dfs(g):
 #     return True
 
 
-# def is_directed_acyclic_bfs2(g):
-#     dtime = defaultdict(int)  # discovery time
-#     for u in g.vertices:
-#         dtime[u] = sys.maxsize
-#     dtime[g.vertices[0]] = 0
-#
-#     seen = set()
-#     queue = deque()
-#     for u in g.vertices:
-#         if u not in seen:
-#             seen.add(u)
-#             queue = deque([u])
-#         while queue:
-#             u = queue.popleft()
-#             for v in g.neighbors(u):
-#                 if v not in seen:
-#                     seen.add(v)
-#                     dtime[v] = dtime[u] + 1
-#                     queue.append(v)
-#                 else:
-#                     if 0 <= dtime[v] <= dtime[u]:
-#                         return False
-#     return True
+def is_directed_acyclic_bfs2(g):
+    dtime = {}  # discovery time
+    for u in g.vertices:
+        dtime[u] = sys.maxsize
+    dtime[g.vertices[0]] = 0
+
+    seen = set()
+    queue = deque()
+    for u in g.vertices:
+        if u not in seen:
+            seen.add(u)
+            queue = deque([u])
+
+        while queue:
+            u = queue.popleft()
+            for v in g.neighbors(u):
+                if v not in seen:
+                    seen.add(v)
+                    dtime[v] = dtime[u] + 1
+                    queue.append(v)
+                elif dtime[u] >= dtime[v]:
+                    return False
+    return True
 
 
 def is_directed_acyclic_bfs(g):
@@ -182,21 +182,21 @@ if __name__ == '__main__':
     # print(is_directed_acyclic_bfs(g2))
 
     g3 = Digraph()
+    g3.add_vertices_from([0, 1, 2])
     g3.add_edges_from([(0, 1), (0, 2), (1, 2)])
-    g3.add_vertex(2)
     assert is_directed_acyclic_bfs(g3) is True
-    # assert is_directed_acyclic_bfs2(g3) is True
+    # assert is_directed_acyclic_dfs_iter(g3) is True
+    assert is_directed_acyclic_bfs2(g3) is True
 
     g4 = Digraph()
     g4.add_edges_from([(0, 1), (1, 0)])
     assert is_directed_acyclic_bfs(g4) is False
-    # assert is_directed_acyclic_dfs_iter(g4) is False
+    assert is_directed_acyclic_dfs_iter(g4) is False
+    assert is_directed_acyclic_bfs2(g4) is False
 
-    # g5 = Digraph()
-    # g5.add_edges_from([(0, 1), (1, 0)])
-    # assert is_directed_acyclic_dfs_iter(g5) is False
-    #
-    # g6 = Digraph()
-    # g6.add_vertices_from([0, 1])
-    # g6.add_edges_from([(0, 1)])
-    # assert is_directed_acyclic_dfs_iter(g6) is True
+    g6 = Digraph()
+    g6.add_vertices_from([0, 1])
+    g6.add_edges_from([(0, 1)])
+    assert is_directed_acyclic_dfs(g6) is True
+    assert is_directed_acyclic_dfs_iter(g6) is True
+    assert is_directed_acyclic_bfs2(g6) is True
