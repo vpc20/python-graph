@@ -13,19 +13,34 @@ def print_all_pairs_shortest_paths(verts, i, j):
 
 def floyd_warshall(wts):
     n = len(wts)
-    d = wts
-    pred = [[i if i != j and wts[i][j] < sys.maxsize else None
-             for j in range(n)]
+    d = [[wts[i][j] for j in range(n)] for i in range(n)]
+    pred = [[i if i != j and wts[i][j] < sys.maxsize else None for j in range(n)]
             for i in range(n)]
 
-    for k in range(1, n + 1):
+    for k in range(n):
         for i in range(n):
             for j in range(n):
-                estd = d[i][k - 1] + d[k - 1][j]
-                if estd < d[i][j]:
-                    d[i][j] = estd
-                    pred[i][j] = pred[k - 1][j]
-    return d, pred
+                if d[i][k] + d[k][j] < d[i][j]:
+                    d[i][j] = d[i][k] + d[k][j]
+                    pred[i][j] = pred[k][j]
+    return pred, d
+
+
+# def floyd_warshall(wts):
+#     n = len(wts)
+#     d = wts
+#     pred = [[i if i != j and wts[i][j] < sys.maxsize else None
+#              for j in range(n)]
+#             for i in range(n)]
+#
+#     for k in range(1, n + 1):
+#         for i in range(n):
+#             for j in range(n):
+#                 estd = d[i][k - 1] + d[k - 1][j]
+#                 if estd < d[i][j]:
+#                     d[i][j] = estd
+#                     pred[i][j] = pred[k - 1][j]
+#     return d, pred
 
 
 # def floyd_warshall(wts):
@@ -77,22 +92,12 @@ def floyd_warshall(wts):
 
 if __name__ == '__main__':
     n = 5
-    weights = [[sys.maxsize] * n for _ in range(n)]
-    for i in range(n):
-        weights[i][i] = 0
-    weights[0][1] = 3
-    weights[0][2] = 8
-    weights[0][4] = -4
+    weights = [[0, 3, 8, sys.maxsize, -4],
+               [sys.maxsize, 0, sys.maxsize, 1, 7],
+               [sys.maxsize, 4, 0, sys.maxsize, sys.maxsize],
+               [2, sys.maxsize, -5, 0, sys.maxsize],
+               [sys.maxsize, sys.maxsize, sys.maxsize, 6, 0]]
 
-    weights[1][3] = 1
-    weights[1][4] = 7
-
-    weights[2][1] = 4
-
-    weights[3][0] = 2
-    weights[3][2] = -5
-
-    weights[4][3] = 6
     # for row in weights:
     #     print(row)
 
@@ -110,8 +115,13 @@ if __name__ == '__main__':
     for row in d:
         print(row)
     print('')
+
     for row in pred:
         print(row)
+    print('')
+
+    for row in pred:  # for comparison in clrs book result
+        print([e + 1 if e is not None else None for e in row])
     print('')
 
     for i in range(n):
