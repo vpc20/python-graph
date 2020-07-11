@@ -21,7 +21,7 @@ def topological_sort(g):
     for u in g.vertices:
         if u not in seen:
             dfs(g, u)
-    return sortedv
+    return list(sortedv)
 
 
 if __name__ == '__main__':
