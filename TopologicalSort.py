@@ -4,7 +4,8 @@
 # that all directed edges go from left to right. Many applications use directed acyclic graphs to indicate
 # precedences among events.
 
-from collections import deque
+from collections import deque, defaultdict
+
 from Graph import Digraph
 
 
@@ -24,13 +25,36 @@ def topological_sort(g):
     return list(sortedv)
 
 
+def topological_sort2(g):
+    result = []
+    in_degrees = defaultdict(int)
+    for u in g.vertices:
+        in_degrees[u] += 0
+        for v in g.neighbors(u):
+            in_degrees[v] += 1
+    # print(in_degrees)
+    q = deque()
+    for k, v in in_degrees.items():
+        if v == 0:
+            q.append(k)
+    # print(q)
+    while q:
+        u = q.popleft()
+        result.append(u)
+        for v in g.neighbors(u):
+            in_degrees[v] -= 1
+            if in_degrees[v] == 0:
+                q.append(v)
+    return result
+
+
 if __name__ == '__main__':
     dress_order = [['shirt', 'tie'], ['tie', 'jacket'], ['belt', 'jacket'], ['shirt', 'belt'],
-                   ['undershorts', 'pants'], ['pants', 'shoes'], ['socks', 'shoes']]
+                   ['undershorts', 'pants'], ['undershorts', 'shoes'], ['pants', 'shoes'], ['pants', 'belt'],
+                   ['socks', 'shoes']]
     g = Digraph()
     g.add_edges_from(dress_order)
-    g.add_vertex('jacket')
     g.add_vertex('watch')
-    g.add_vertex('shoes')
     print(g)
     print(topological_sort(g))
+    print(topological_sort2(g))
