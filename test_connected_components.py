@@ -1,14 +1,15 @@
 from random import randint
 from unittest import TestCase
 
-from ConnectedComponents import connected_components, strongly_connected_components
 import networkx as nx
+
 import Graph as gx
+from ConnectedComponents import connected_components, connected_components_bfs, connected_components_dj
 
 
 class TestConnectedComponents(TestCase):
     def test_connected_components(self):
-        for _ in range(1000):
+        for _ in range(10000):
             nxg = nx.fast_gnp_random_graph(randint(1, 10), randint(1, 9) / 10)
             print(sorted(nxg.nodes))
             print(sorted(nxg.edges))
@@ -21,8 +22,16 @@ class TestConnectedComponents(TestCase):
             print(sorted(g.vertices))
             print(sorted(g.edges))
 
+            # print(sorted([sorted(list(e)) for e in nx.connected_components(nxg)]))
+            # print(sorted([sorted(e) for e in connected_components_bfs(g)]))
             self.assertEqual(sorted([sorted(list(e)) for e in nx.connected_components(nxg)]),
                              sorted([sorted(e) for e in connected_components(g)]))
+            self.assertEqual(sorted([sorted(list(e)) for e in nx.connected_components(nxg)]),
+                             sorted([sorted(e) for e in connected_components_bfs(g)]))
+            self.assertEqual([e for e in nx.connected_components(nxg)],
+                             connected_components_dj(g))
+            # print([e for e in nx.connected_components(nxg)])
+            # print(connected_components_dj(g))
 
             # def test_strongly_connected_components(self):
             #     # cp3 4.1 in https://visualgo.net/en/dfsbfs

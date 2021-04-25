@@ -1,4 +1,4 @@
-from collections import defaultdict, deque
+from collections import deque
 
 from DisjointSet import DisjointSet
 from Graph import Graph, Digraph
@@ -38,6 +38,7 @@ def connected_components(g):
     :param g: input Graph
     :return: list of sets contaning the connected vertices
     """
+
     def dfs(g, u):
         seen.add(u)
         conns[-1].append(u)
@@ -54,16 +55,35 @@ def connected_components(g):
     return conns
 
 
-# def connected_components_dj(g):
-#     djset = DisjointSet()
-#     for v in g.vertices:
-#         djset.make_set(v)
-#
-#     for v1, v2 in g.edges:
-#         if djset.find_set(v1) != djset.find_set(v2):
-#             djset.union(v1, v2)
-#
-#     return djset.get_set()
+def connected_components_bfs(g):
+    visited = set()
+    conns = []
+    q = deque()
+    for u in g.vertices:
+        if u not in visited:
+            visited.add(u)
+            conns.append([u])
+            q.append(u)
+        while q:
+            u = q.popleft()
+            for v in g.neighbors(u):
+                if v not in visited:
+                    visited.add(v)
+                    conns[-1].append(v)
+                    q.append(v)
+    return conns
+
+
+def connected_components_dj(g):
+    djset = DisjointSet()
+    for v in g.vertices:
+        djset.make_set(v)
+
+    for v1, v2 in g.edges:
+        if djset.find_set(v1) != djset.find_set(v2):
+            djset.union(v1, v2)
+
+    return djset.get_set()
 
 
 def strongly_connected_components(g):
@@ -119,8 +139,9 @@ if __name__ == '__main__':
     g.add_edges_from([(1, 2), (1, 5), (2, 5), (3, 6)])
     g.add_vertex(4)
     print(f'connected: {is_connected(g)}')
-    # print(connected_components_dj(g))
+    print(connected_components_dj(g))
     print(connected_components(g))
+    print(connected_components_bfs(g))
     assert connected_components(g) == [[1, 2, 5], [3, 6], [4]]
 
     g = Graph()
@@ -129,6 +150,9 @@ if __name__ == '__main__':
     # print(connected_components_dj(g))
     print(connected_components(g))
     assert connected_components(g) == [[1, 2, 3, 6, 5, 4]]
+    print(connected_components_bfs(g))
+    print(connected_components_dj(g))
+    assert connected_components_bfs(g) == [[1, 2, 5, 3, 4, 6]]
 
     dg = Digraph()
     dg.add_edges_from([('a', 'b'), ('b', 'c'), ('b', 'e'), ('c', 'd'), ('c', 'g'), ('d', 'c'), ('d', 'h'),

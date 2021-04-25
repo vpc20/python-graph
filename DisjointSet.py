@@ -28,13 +28,18 @@ class DisjointSet:
     #     #     self.parent[xlist.pop()] = self.parent[x]
     #     return self.parent[x]
 
-    def link(self, x, y):  # union by rank
-        if self.rank[x] > self.rank[y]:
-            self.parent[y] = x
-        else:
-            self.parent[x] = y
-            if self.rank[x] == self.rank[y]:
-                self.rank[y] += 1
+    def link(self, x, y):
+        for k, v in self.parent.items():
+            if v == y:
+                self.parent[k] = x
+
+    # def link(self, x, y):  # union by rank
+    #     if self.rank[x] > self.rank[y]:
+    #         self.parent[y] = x
+    #     else:
+    #         self.parent[x] = y
+    #         if self.rank[x] == self.rank[y]:
+    #             self.rank[y] += 1
 
     def union(self, x, y):
         self.link(self.find_set(x), self.find_set(y))
