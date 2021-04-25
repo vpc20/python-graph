@@ -139,7 +139,7 @@ if __name__ == '__main__':
     g.add_edges_from([(1, 2), (1, 5), (2, 5), (3, 6)])
     g.add_vertex(4)
     print(f'connected: {is_connected(g)}')
-    print(connected_components_dj(g))
+    # print(connected_components_dj(g))
     print(connected_components(g))
     print(connected_components_bfs(g))
     assert connected_components(g) == [[1, 2, 5], [3, 6], [4]]
@@ -151,8 +151,9 @@ if __name__ == '__main__':
     print(connected_components(g))
     assert connected_components(g) == [[1, 2, 3, 6, 5, 4]]
     print(connected_components_bfs(g))
-    print(connected_components_dj(g))
     assert connected_components_bfs(g) == [[1, 2, 5, 3, 4, 6]]
+    print(connected_components_dj(g))
+    assert connected_components_dj(g) == [{1, 2, 5, 3, 4, 6}]
 
     dg = Digraph()
     dg.add_edges_from([('a', 'b'), ('b', 'c'), ('b', 'e'), ('c', 'd'), ('c', 'g'), ('d', 'c'), ('d', 'h'),

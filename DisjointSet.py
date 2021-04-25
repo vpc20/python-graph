@@ -12,34 +12,18 @@ class DisjointSet:
         self.parent[x] = x
         self.rank[x] = 0
 
-    def find_set(self, x):  # use path compression
+    def find_set(self, x):  # use path compression, find root parent
         if x != self.parent[x]:
             self.parent[x] = self.find_set(self.parent[x])
         return self.parent[x]
 
-    # def find_set(self, x):  # use path compression
-    #     xlist = []
-    #     while x != self.parent[x]:
-    #         xlist.append(x)
-    #         x = self.parent[x]
-    #     for i in xlist:
-    #         self.parent[i] = self.parent[x]
-    #     # while xlist:
-    #     #     self.parent[xlist.pop()] = self.parent[x]
-    #     return self.parent[x]
-
-    def link(self, x, y):
-        for k, v in self.parent.items():
-            if v == y:
-                self.parent[k] = x
-
-    # def link(self, x, y):  # union by rank
-    #     if self.rank[x] > self.rank[y]:
-    #         self.parent[y] = x
-    #     else:
-    #         self.parent[x] = y
-    #         if self.rank[x] == self.rank[y]:
-    #             self.rank[y] += 1
+    def link(self, x, y):  # union by rank
+        if self.rank[x] > self.rank[y]:
+            self.parent[y] = x
+        else:
+            self.parent[x] = y
+            if self.rank[x] == self.rank[y]:
+                self.rank[y] += 1
 
     def union(self, x, y):
         self.link(self.find_set(x), self.find_set(y))
@@ -47,7 +31,7 @@ class DisjointSet:
     def get_set(self):
         conn_comps = defaultdict(set)
         for k, val in self.parent.items():
-            conn_comps[val].add(k)
+            conn_comps[self.find_set(val)].add(k)
         return list(conn_comps.values())
 
 
@@ -66,4 +50,3 @@ if __name__ == '__main__':
     print(djset.find_set('c'))
 
     print(djset.get_set())
-
