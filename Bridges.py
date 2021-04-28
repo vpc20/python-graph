@@ -1,11 +1,12 @@
-from Graph import Graph, is_connected
+from ConnectedComponents import is_connected_bfs, is_connected
+from Graph import Graph
 
 
 def bridges_naive(g):
     result = []
     for u, v in g.edges:
         g.remove_edge(u, v)
-        if not is_connected(g):
+        if not is_connected_bfs(g):
             result.append((u, v))
         g.add_edge(u, v)
     return result

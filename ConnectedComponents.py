@@ -5,6 +5,31 @@ from Graph import Graph, Digraph
 from Transpose import transpose
 
 
+# def is_connected(g):
+#     """
+#     An undirected graph is connected if every vertex is reachable from all other vertices.
+#
+#     :param g: input Graph
+#     :return: True if the graph is connected, False otherwise.
+#     """
+#
+#     def dfs(g, u):
+#         seen.add(u)
+#         for v in g.neighbors(u):
+#             if v not in seen:
+#                 dfs(g, v)
+#
+#     count = 0
+#     seen = set()
+#     for u in g.vertices:
+#         if u not in seen:
+#             count += 1  # count connected components
+#             if count > 1:
+#                 return False
+#             dfs(g, u)
+#     return True
+
+
 def is_connected(g):
     """
     An undirected graph is connected if every vertex is reachable from all other vertices.
@@ -19,21 +44,43 @@ def is_connected(g):
             if v not in seen:
                 dfs(g, v)
 
-    count = 0
+    first_pass = True
     seen = set()
     for u in g.vertices:
         if u not in seen:
-            count += 1  # count connected components
-            if count > 1:
+            if first_pass:
+                first_pass = False
+            else:
                 return False
             dfs(g, u)
     return True
 
 
+def is_connected_bfs(g):
+    visited = set()
+    first_pass = True
+    q = deque()
+    for u in g.vertices:
+        if u not in visited:
+            if first_pass:
+                first_pass = False
+            else:
+                return False
+            q.append(u)
+            visited.add(u)
+        while q:
+            u = q.popleft()
+            for v in g.neighbors(u):
+                if v not in visited:
+                    q.append(v)
+                    visited.add(v)
+    return True
+
+
 def connected_components(g):
     """
-    The connected components of a graph are the equivalence classes of vertices under
-    the “is reachable from” relation.
+    The connected components of a graph represent pieces of a graph. Two vertices are in the same
+    component of a graph if and only if there exists some path between them.
 
     :param g: input Graph
     :return: list of sets contaning the connected vertices
