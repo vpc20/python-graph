@@ -33,10 +33,7 @@ def topological_sort2(g):
         for v in g.neighbors(u):
             in_degrees[v] += 1
     # print(in_degrees)
-    q = deque()
-    for k, v in in_degrees.items():
-        if v == 0:
-            q.append(k)
+    q = deque(k for k, v in in_degrees.items() if v == 0)
     # print(q)
     while q:
         u = q.popleft()
@@ -46,6 +43,25 @@ def topological_sort2(g):
             if in_degrees[v] == 0:
                 q.append(v)
     return result
+
+
+# def topological_sort3(g):
+#     in_degrees = defaultdict(int)
+#
+#     for u in g.vertices:
+#         in_degrees[u] += 0
+#         for v in g.neighbors(u):
+#             in_degrees[v] += 1
+#
+#     list0 = [k for k, v in in_degrees.items() if v == 0]  # vertices with in-degree = 0
+#     result = list0.copy()
+#     for u in list0:
+#         for v in g.neighbors(u):
+#             in_degrees[v] -= 1
+#             if in_degrees[v] == 0:
+#                 result.append(v)
+#
+#     return result
 
 
 if __name__ == '__main__':

@@ -144,8 +144,8 @@ def is_directed_acyclic_bfs(g):
     in_degrees = defaultdict(int)
     for u in g.vertices:
         in_degrees[u] += 0
-    for _, v in g.edges:
-        in_degrees[v] += 1
+        for v in g.neighbors(u):
+            in_degrees[v] += 1
 
     q = deque([k for k, v in in_degrees.items() if v == 0])
     while q:
