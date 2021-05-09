@@ -1,4 +1,3 @@
-import sys
 from collections import defaultdict, deque
 
 from Graph import Digraph
@@ -111,29 +110,30 @@ def is_directed_acyclic_dfs_iter(g):
 #     return True
 
 
-def is_directed_acyclic_bfs2(g):
-    dtime = {}  # discovery time
-    for u in g.vertices:
-        dtime[u] = sys.maxsize
-    dtime[g.vertices[0]] = 0
-
-    seen = set()
-    queue = deque()
-    for u in g.vertices:
-        if u not in seen:
-            seen.add(u)
-            queue = deque([u])
-
-        while queue:
-            u = queue.popleft()
-            for v in g.neighbors(u):
-                if v not in seen:
-                    seen.add(v)
-                    dtime[v] = dtime[u] + 1
-                    queue.append(v)
-                elif dtime[u] >= dtime[v]:
-                    return False
-    return True
+# def is_directed_acyclic_bfs2(g):  # incorrect
+#     dtime = {}  # discovery time
+#     for u in g.vertices:
+#         # dtime[u] = sys.maxsize
+#         dtime[u] = 0
+#     dtime[g.vertices[0]] = 0
+#
+#     seen = set()
+#     queue = deque()
+#     for u in g.vertices:
+#         if u not in seen:
+#             seen.add(u)
+#             queue = deque([u])
+#
+#         while queue:
+#             u = queue.popleft()
+#             for v in g.neighbors(u):
+#                 if v not in seen:
+#                     seen.add(v)
+#                     dtime[v] = dtime[u] + 1
+#                     queue.append(v)
+#                 elif dtime[u] > dtime[v]:
+#                     return False
+#     return True
 
 
 def is_directed_acyclic_bfs(g):
@@ -156,6 +156,25 @@ def is_directed_acyclic_bfs(g):
             if in_degrees[v] == 0:
                 q.append(v)
     return visited == len(g.vertices)
+
+
+def is_directed_acyclic_bfs2(g):
+    if not isinstance(g, Digraph):
+        return False
+    in_degrees = defaultdict(int)
+    for u in g.vertices:
+        in_degrees[u] += 0
+    for _, v in g.edges:
+        in_degrees[v] += 1
+
+    list0 = [k for k, v in in_degrees.items() if v == 0]  # vertices with in-degree = 0
+    for u in list0:
+        for v in g.neighbors(u):
+            in_degrees[v] -= 1
+            if in_degrees[v] == 0:
+                list0.append(v)
+
+    return len(list0) == len(g.vertices)
 
 
 if __name__ == '__main__':
@@ -186,17 +205,22 @@ if __name__ == '__main__':
     g3.add_edges_from([(0, 1), (0, 2), (1, 2)])
     assert is_directed_acyclic_bfs(g3) is True
     # assert is_directed_acyclic_dfs_iter(g3) is True
-    assert is_directed_acyclic_bfs2(g3) is True
+    # assert is_directed_acyclic_bfs2(g3) is True
 
     g4 = Digraph()
     g4.add_edges_from([(0, 1), (1, 0)])
     assert is_directed_acyclic_bfs(g4) is False
     assert is_directed_acyclic_dfs_iter(g4) is False
-    assert is_directed_acyclic_bfs2(g4) is False
+    # assert is_directed_acyclic_bfs2(g4) is False
 
     g6 = Digraph()
     g6.add_vertices_from([0, 1])
     g6.add_edges_from([(0, 1)])
     assert is_directed_acyclic_dfs(g6) is True
     assert is_directed_acyclic_dfs_iter(g6) is True
+    # assert is_directed_acyclic_bfs2(g6) is True
+
+    g6 = Digraph()
+    g6.add_vertices_from([0, 1, 2, 3])
+    g6.add_edges_from([(1, 2), (1, 3), (3, 0)])
     assert is_directed_acyclic_bfs2(g6) is True
