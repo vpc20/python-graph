@@ -13,7 +13,7 @@ def dijkstra(g, src, tgt):
 
     while minq:
         estimate_dist, vertex = heappop(minq)
-        for neighbor in g[vertex]:
+        for neighbor in g[vertex]:  # breadth-first search
             estimate_dist = dists[vertex] + weight[(vertex, neighbor)]
             if estimate_dist < dists[neighbor]:  # relaxation
                 dists[neighbor] = estimate_dist
