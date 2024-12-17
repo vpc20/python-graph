@@ -776,3 +776,4 @@ if __name__ == '__main__':
     # g1 = Graph()
     # g1.add_edges_from([('a', 'b'), ('c', 'd')])
     # print(is_connected(g1))
+    print(g)
