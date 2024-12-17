@@ -3,31 +3,31 @@ from heapq import heappop, heappush
 
 
 def dijkstra(g, src, tgt):
-    dist = {}  # distances
-    pred = {}  # predecessors
-    for u in g.keys():
-        dist[u] = sys.maxsize
-        pred[u] = None
-    dist[src] = 0
-    minq = [(0, src)]
+    dists = {}  # distances
+    preds = {}  # predecessors
+    for vertex in g.keys():
+        dists[vertex] = sys.maxsize
+        preds[vertex] = None
+    dists[src] = 0
+    minq = [(0, src)]  # minimum priority queue
 
     while minq:
-        d, u = heappop(minq)
-        for v in g[u]:
-            d = dist[u] + w[(u, v)]
-            if d < dist[v]:  # relaxation
-                dist[v] = d
-                pred[v] = u
-                heappush(minq, (d, v))
-
-    u = tgt
-    path = [u]
-    while u != src:
-        u = pred[u]
-        path.append(u)
+        estimate_dist, vertex = heappop(minq)
+        for neighbor in g[vertex]:
+            estimate_dist = dists[vertex] + weight[(vertex, neighbor)]
+            if estimate_dist < dists[neighbor]:  # relaxation
+                dists[neighbor] = estimate_dist
+                preds[neighbor] = vertex
+                heappush(minq, (estimate_dist, neighbor))
+    # get the path, since we produced the predecessors, the path is reversed
+    vertex = tgt
+    path = [vertex]
+    while vertex != src:
+        vertex = preds[vertex]
+        path.append(vertex)
     path.reverse()
 
-    return dist[tgt], path
+    return dists[tgt], path
 
 
 # def dijkstra(g, src):
@@ -80,16 +80,16 @@ if __name__ == '__main__':
     # for k in g.keys():
     #     for v in g[k]:
     #         print(f'({k}, {v})')
-    w = {('s', 't'): 10,
-         ('s', 'y'): 5,
-         ('t', 'x'): 1,
-         ('t', 'y'): 2,
-         ('y', 't'): 3,
-         ('y', 'x'): 9,
-         ('y', 'z'): 2,
-         ('x', 'z'): 4,
-         ('z', 's'): 7,
-         ('z', 'x'): 6}
+    weight = {('s', 't'): 10,
+              ('s', 'y'): 5,
+              ('t', 'x'): 1,
+              ('t', 'y'): 2,
+              ('y', 't'): 3,
+              ('y', 'x'): 9,
+              ('y', 'z'): 2,
+              ('x', 'z'): 4,
+              ('z', 's'): 7,
+              ('z', 'x'): 6}
 
     dist, path = dijkstra(g, 's', 'x')
     print(dist)
