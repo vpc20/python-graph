@@ -1,7 +1,7 @@
 import sys
 from heapq import heappop, heappush
 
-# the adjacency list is a nested dictionary
+# the adjacency list (dictionary) contain only edges, weight is a different dictionary
 def dijkstra(g, src, tgt):
     dists = {}  # distances
     preds = {}  # predecessors
@@ -13,8 +13,8 @@ def dijkstra(g, src, tgt):
 
     while minq:
         estimate_dist, vertex = heappop(minq)
-        for neighbor, weight in g[vertex].items():  # breadth-first search
-            estimate_dist = dists[vertex] + weight
+        for neighbor in g[vertex]:  # breadth-first search
+            estimate_dist = dists[vertex] + weight[(vertex, neighbor)]
             if estimate_dist < dists[neighbor]:  # relaxation
                 dists[neighbor] = estimate_dist
                 preds[neighbor] = vertex
@@ -27,7 +27,6 @@ def dijkstra(g, src, tgt):
         path.append(vertex)
     path.reverse()
 
-    print(dists)
     return dists[tgt], path
 
 
@@ -77,25 +76,20 @@ if __name__ == '__main__':
     # print(dg)
     # print(dijkstra(dg, 0))
 
-    g = {'s': {'t': 10, 'y': 5},
-         't': {'x': 1, 'y': 2},
-         'y': {'t': 3, 'x': 9, 'z': 2},
-         'x': {'z': 4},
-         'z': {'s': 7, 'x': 6}
-         }
+    g = {'s': ['t', 'y'], 't': ['x', 'y'], 'y': ['t', 'x', 'z'], 'x': ['z'], 'z': ['s', 'x']}
     # for k in g.keys():
     #     for v in g[k]:
     #         print(f'({k}, {v})')
-    # weight = {('s', 't'): 10,
-    #           ('s', 'y'): 5,
-    #           ('t', 'x'): 1,
-    #           ('t', 'y'): 2,
-    #           ('y', 't'): 3,
-    #           ('y', 'x'): 9,
-    #           ('y', 'z'): 2,
-    #           ('x', 'z'): 4,
-    #           ('z', 's'): 7,
-    #           ('z', 'x'): 6}
+    weight = {('s', 't'): 10,
+              ('s', 'y'): 5,
+              ('t', 'x'): 1,
+              ('t', 'y'): 2,
+              ('y', 't'): 3,
+              ('y', 'x'): 9,
+              ('y', 'z'): 2,
+              ('x', 'z'): 4,
+              ('z', 's'): 7,
+              ('z', 'x'): 6}
 
     dist, path = dijkstra(g, 's', 'x')
     print(dist)
