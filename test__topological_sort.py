@@ -20,3 +20,7 @@ class TestTopologicalSort(TestCase):
         dg = Digraph()
         dg.add_edges_from([(0, 1), (0, 2), (1, 3), (2, 3), (3, 4)])
         self.assertEqual([0, 2, 1, 3, 4], topological_sort(dg))
+
+
+# t = TestTopologicalSort()
+# t.test_topological_sort()
