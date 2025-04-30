@@ -98,6 +98,18 @@ def bfs_all_paths(g, source, target):
         queue.pop(0)
     return all_paths
 
+# bfs generator of all paths
+def bfs_all_paths1(g, source, target):
+    q = deque([(source, [source])])
+    while q:
+        v, path = q.popleft()
+        for nb in g.neighbors(v):
+            if nb == target:
+                yield path + [nb]
+                continue
+            if nb not in path:
+                q.append((nb, path + [nb]))
+
 
 # def bfs_shortest_path1(graph, source, target):
 #     all_paths = [[source]]
@@ -138,6 +150,8 @@ if __name__ == '__main__':
     print(bfs_all_shortest_path(g, 's', 'u'))
     print("bfs all paths from 's' to 'u' ==> ", end='')
     print(bfs_all_paths(g, 's', 'u'))
+    print("bfs all paths from 's' to 'u' ==> ", end='')
+    print(list(bfs_all_paths1(g, 's', 'u')))
 
     print('---------- bfs ----------')
     bfs(g, 's')

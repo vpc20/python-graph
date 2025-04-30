@@ -1,7 +1,7 @@
 from collections import defaultdict, deque
 from itertools import combinations
 
-from DisjointSet import DisjointSet
+from disjoint_set import DisjointSet
 
 
 class Graph:

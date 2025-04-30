@@ -161,6 +161,22 @@ def dfs_vertices(g):
 #     _dfs_all_paths(g, source, target)
 #     return all_paths
 
+def dfs_all_paths(g, source, target):
+    def dfs(g, vertex, path):
+        visited.add(vertex)
+        if vertex == target:
+            all_paths.append(path)
+            return
+        for nb in g.neighbors(vertex):
+            if nb not in visited:
+                dfs(g, nb, path + [nb])
+                visited.remove(nb)
+
+    all_paths = []
+    visited = set()
+    dfs(g, source, [source])
+    return all_paths
+
 
 # def dfs(graph, source):
 #     def _dfs(graph, vertex):
@@ -229,12 +245,10 @@ if __name__ == '__main__':
 
     # print("dfs path from 'y' to 'v' ==> ", end='')
     # print(dfs_path(dg, 'y', 'v'))
-    # print("dfs all paths from 'u' to 'v'  ==> ", end='')
-    # print(dfs_all_paths(dg, 'u', 'v'))
-    # print('')
+    print("dfs all paths from 'u' to 'v'  ==> ", end='')
+    print(dfs_all_paths(dg, 'u', 'v'))
+    print('')
 
     print('dfs')
     dfs(dg)
     print('')
-
-
