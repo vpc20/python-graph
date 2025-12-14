@@ -173,6 +173,6 @@ cython_debug/
 
 *.iml
 *.xml
-temp*.py
+temp*
 
 
